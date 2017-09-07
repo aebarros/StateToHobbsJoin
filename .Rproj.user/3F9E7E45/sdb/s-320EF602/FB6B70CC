@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(plyr)\nlibrary(dplyr)\nlibrary(lubridate)\nlibrary(reshape2)\nlibrary(purrr)\n\nhobbsSmallNet<-read.table(\"data/hobbsSmallNetFlat.txt\", header= T, sep= \"\\t\")\nhead(hobbsSmallNet)\nstate20<-readRDS(\"data/state20clean.rds\")\nstateSLS<-readRDS(\"data/stateSLSclean.rds\")\n\n#join state data\nstateSmallNet<-state20%>%\n  rbind(stateSLS)\n\n#add agency columns\nstateSmallNet$agency<-rep(\"CDFW\",nrow(stateSmallNet))\nhobbsSmallNet$agency<-rep(\"Hobbs\",nrow(hobbsSmallNet))\n\n#format hobbs dates\nhobbsSmallNet$towdate <- as.Date(hobbsSmallNet$towdate , \"%m/%d/%Y\")\n\n#format state polstn into factor class\nstateSmallNet$polstn<-as.factor(stateSmallNet$polstn)\n\n#convert hobbs dur to just numbers and integer format#\nhobbsSmallNet$dur<-strptime(hobbsSmallNet$dur, \"%m/%d/%Y %H:%M:%S\")\nhobbsSmallNet$dur<-strftime(hobbsSmallNet$dur, format=\"%H:%M:%S\")\nhobbsSmallNet$dur <- gsub(\"00\", \"\", hobbsSmallNet$dur)\nhobbsSmallNet$dur<-gsub(\":\",\"\",hobbsSmallNet$dur)\nhobbsSmallNet<-transform(hobbsSmallNet, dur = as.integer(dur))\nhead(hobbsSmallNet)\n\n#convert hobbs survey to integer\nhobbsSmallNet$survey<-as.integer(hobbsSmallNet$survey)\n\n#convert state code to factor\nstateSmallNet$code<-as.factor(stateSmallNet$code)\n\n#join all data\nallSmallNet<-hobbsSmallNet%>%\n  bind_rows(stateSmallNet)\nhead(allSmallNet)\n\n#write to .txt\nwrite.table(allSmallNet, \"C:\\\\Users\\\\hobbs\\\\Desktop\\\\R for work\\\\StateToHobbsDataClean\\\\allSmallNet.txt\", sep=\"\\t\", col.names = T, row.names = F)\n",
+    "created" : 1504795627742.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2163786100",
+    "id" : "FB6B70CC",
+    "lastKnownWriteTime" : 1504644517,
+    "last_content_update" : 1504800026215,
+    "path" : "C:/Users/hobbs/Desktop/R for work/StateToHobbsDataClean/joinSmallNet.R",
+    "project_path" : "joinSmallNet.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

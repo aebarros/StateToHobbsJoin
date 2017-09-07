@@ -1,0 +1,22 @@
+"MethodRowID"	"MethodType"	"MethodCode"	"Active"	"MethodName"	"NormalizedCode"
+1	"REDDCNT"	"AREDD"	0	"Aerial Redd Counts"	38
+2	"SEINE"	"BGSEIN"	0	"Bag Seine"	59
+3	"SEINE"	"BSEIN"	0	"Beach seine"	49
+4	"CARCASS"	"CSURV"	0	"Carcass Survey"	40
+5	"TRAP"	"DSTR"	0	"Diversion Trap"	64
+6	"NET"	"FNET"	0	"Fyke net"	68
+7	"SALVAGE"	"FSLVG"	0	"Facilty salvage"	
+8	"NET"	"HNET"	0	"Hoop net"	
+9	"HATCHERY"	"HTCHRET"	0	"Hatchery Returns"	41
+10	"TRAWL"	"KDTR"	0	"Kodiak Trawl"	63
+11	"LADDER"	"LDRCNT"	0	"Ladder Counts"	43
+12	"RELEASE"	"MREL"	0	"Release of marked fish"	
+13	"TRAWL"	"MWTR"	1	"Midwater Trawl"	45
+14	"ANGLER"	"NGLRSRV"	0	"Angler Survey"	39
+15	"TRAWL"	"OTR"	0	"Otter Trawl"	48
+16	"SEINE"	"PSEIN"	0	"Purse seine"	69
+17	"CWT"	"RCWT"	0	"Read/record code wire tag info"	
+18	"TRAP"	"RSTR"	0	"Rotary Screw Trap"	60
+19	"SNORKEL"	"SNRKLSRV"	0	"Snorkel Survey"	47
+20	"RELEASE"	"TREL"	0	"Release of tagged fish"	
+21	"TRAWL"	"TWNET"	0	"Townet Survey"	67

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "library(plyr)\nlibrary(dplyr)\nlibrary(lubridate)\nlibrary(reshape2)\nlibrary(purrr)\n\nhobbsLargeNet<-read.table(\"data/hobbsLargeNetFlat.txt\", header= T, sep= \"\\t\")\nhead(hobbsLargeNet)\n\nstateBS<-readRDS(\"data/stateBSclean.rds\")\nstateMWT<-readRDS(\"data/stateMWTclean.rds\")\nstateTN<-readRDS(\"data/stateTNclean.rds\")\nstr(stateBS)\nstr(stateMWT)\nstr(stateTN)\n\n#format columns to have same types between dataframes\nstateBS$code<-as.factor(stateBS$code)\nstateMWT$code<-as.factor(stateMWT$code)\nstateTN$code<-as.factor(stateTN$code)\nstateBS$polystn<-as.factor(stateBS$polystn)\nstateMWT$polystn<-as.factor(stateMWT$polystn)\nstateTN$polystn<-as.factor(stateTN$polystn)\n\n#join state data together\nstateLargeNet<-stateBS%>%\n  bind_rows(stateMWT)%>%\n  bind_rows(stateTN)\nhead(stateLargeNet)\n\n#rename region>bregion\nstateLargeNet<-rename(stateLargeNet, bregion=region)\n\n#dublicate rows were created somewhere in the process, this is easiest fix\nstateLargeNet<-unique(stateLargeNet)\n\n#unfortunately the state surveys don't seem to use the same common names or codes for species\n#so this is going to take some work renaming everything to our standards\n\n#found this nifty function on stackoverflow that uses toupper to capitilize the first\n#letter in each word in a string\nsimpleCap <- function(x) {\n  s <- strsplit(x, \" \")[[1]]\n  paste(toupper(substring(s, 1,1)), substring(s, 2),\n        sep=\"\", collapse=\" \")\n}\n\n#use it on comnames\nstateLargeNet$comname<-as.character(stateLargeNet$comname)\nstateLargeNet$comname<-sapply(stateLargeNet$comname, simpleCap)\n\n#trasnfer comname back to factor\nstateLargeNet$comname<-as.factor(stateLargeNet$comname)\n\nstatespecies<-unique(stateLargeNet$comname)\nstr(statespecies)\n\n#add in agencies\nstateLargeNet$agency<-rep(\"CDFW\",nrow(stateLargeNet))\nhobbsLargeNet$agency<-rep(\"Hobbs\",nrow(hobbsLargeNet))\n\n#format Hobbs dates\nhobbsLargeNet$Date <- as.Date(hobbsLargeNet$Date , \"%m/%d/%Y\")\n\n#join state data to hobbs\nallLargeNet<-stateLargeNet%>%\n  bind_rows(hobbsLargeNet)\nstr(allLargeNet)\n\n#next problem is all the species \"codes\" are different between hobbs, state, and even within state surveys\n#first off import the species lookups from hobbs lab\nhobbsSpeciesLookUp<-read.table(\"data/hobbsSpeciesLookUp.txt\", header= T, sep= \"\\t\")\nhead(hobbsSpeciesLookUp)\n\n#next delete the old \"code\" column from allLargeNet\nallLargeNet<-select(allLargeNet, -code)\n\n#lets also only select the code and comname from hobbsSpeciesLookup for use\nhobbsSpeciesLookUp<-select(hobbsSpeciesLookUp, code, comname)\n\n#now join in hobbsSpeciesLookup\nallLargeNet<-allLargeNet%>%\n  full_join(hobbsSpeciesLookUp)\nhead(allLargeNet)\nstr(allLargeNet)\n\n#first lets replace null with \"No Catch\"\nallLargeNet$comname <- sub(\"^$\", \"No Catch\", allLargeNet$comname)\n\n#now lets do a check\nallSpecies<-select(allLargeNet, code, comname)\nallSpecies<-unique(allSpecies)\nhead(allSpecies)\nView(allSpecies) #\"View\" call might only work with RStudio, don't know if it works with default rconsole\n\n#first lets replace null with \"No Catch\"\nallLargeNet$comname <- sub(\"^$\", \"No Catch\", allLargeNet$comname)\n\n#write to .txt\nwrite.table(allLargeNet, \"C:\\\\Users\\\\hobbs\\\\Desktop\\\\R for work\\\\StateToHobbsDataClean\\\\allLargeNet.txt\", sep=\"\\t\", col.names = T, row.names = F)\n\n",
+    "created" : 1504801740062.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2744866862",
+    "id" : "D9F4B711",
+    "lastKnownWriteTime" : 1504802759,
+    "last_content_update" : 1504802759404,
+    "path" : "C:/Users/hobbs/Desktop/R for work/StateToHobbsDataClean/joinLargeNet.R",
+    "project_path" : "joinLargeNet.R",
+    "properties" : {
+        "source_window_id" : "",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
